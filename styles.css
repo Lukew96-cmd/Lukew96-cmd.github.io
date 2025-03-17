@@ -1,0 +1,50 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #222; /* Black */
+    color: white;
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    max-width: 600px;
+    margin: auto;
+    background: #333; /* Darker background for the container */
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+textarea {
+    width: 100%;
+    height: 100px;
+    padding: 10px;
+    border: 1px solid #800000; /* Dark red border */
+    border-radius: 5px;
+    font-size: 16px;
+    background-color: #444; /* Darker text area background */
+    color: white; /* White text color */
+}
+
+button {
+    margin-top: 10px;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    background-color: #800000; /* Dark red */
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #900; /* Slightly lighter red on hover */
+}
+
+pre {
+    background: #444; /* Darker code background */
+    padding: 10px;
+    border-radius: 5px;
+    overflow-x: auto;
+    color: #dcdcdc; /* Light gray text color */
+}
