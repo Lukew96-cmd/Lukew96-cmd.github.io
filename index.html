@@ -1,19 +1,1153 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
-    <title>AI Code Generator</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Secure Website</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Arial', sans-serif;
+      background-color: black;
+      color: #ffffff;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 20px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+      border: 2px solid #ff0000;
+      border-radius: 10px;
+      padding: 10px;
+      background-color: rgba(128, 0, 128, 0.3);
+      box-shadow: 0 0 15px #ff0000;
+    }
+    
+    .header h1 {
+      margin: 0;
+      color: #ff0000;
+      text-shadow: 0 0 5px #800080;
+    }
+    
+    .chat-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      border: 2px solid #800080;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 0 15px #800080;
+    }
+    
+    #messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 15px;
+      background-color: rgba(20, 20, 20, 0.8);
+    }
+    
+    .message {
+      margin-bottom: 15px;
+      padding: 10px;
+      border-radius: 5px;
+      background-color: rgba(50, 50, 50, 0.5);
+      border-left: 3px solid #ff0000;
+    }
+    
+    .message .username {
+      font-weight: bold;
+      color: #ff0000;
+      margin-bottom: 5px;
+    }
+    
+    .message .timestamp {
+      font-size: 0.8em;
+      color: #aaaaaa;
+    }
+    
+    .message .content img {
+      max-width: 100%;
+      max-height: 300px;
+      border-radius: 5px;
+      margin-top: 10px;
+      border: 1px solid #800080;
+    }
+    
+    .system-message {
+      margin-bottom: 15px;
+      padding: 10px;
+      border-radius: 5px;
+      background-color: rgba(80, 0, 80, 0.3);
+      border-left: 3px solid #ff00ff;
+      color: #ff9900;
+      font-style: italic;
+    }
+    
+    .input-area {
+      display: flex;
+      padding: 10px;
+      background-color: rgba(40, 40, 40, 0.8);
+      border-top: 2px solid #800080;
+      position: relative;
+    }
+    
+    #m {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid #800080;
+      border-radius: 5px 0 0 5px;
+      background-color: rgba(30, 30, 30, 0.9);
+      color: white;
+    }
+    
+    button {
+      padding: 10px 20px;
+      background-color: #800080;
+      color: white;
+      border: 1px solid #ff0000;
+      border-radius: 0 5px 5px 0;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    
+    button:hover {
+      background-color: #ff0000;
+    }
+    
+    .typing-indicator {
+      padding: 5px 10px;
+      color: #aaaaaa;
+      font-style: italic;
+    }
+    
+    .user-info {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    
+    .user-count {
+      color: #ff0000;
+      background-color: rgba(30, 30, 30, 0.9);
+      padding: 5px 10px;
+      border-radius: 5px;
+      border: 1px solid #800080;
+    }
+    
+    .username-container {
+      display: flex;
+      align-items: center;
+    }
+    
+    #username {
+      padding: 5px 10px;
+      background-color: rgba(30, 30, 30, 0.9);
+      color: white;
+      border: 1px solid #800080;
+      border-radius: 5px;
+      margin-right: 10px;
+    }
+    
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.8);
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .modal-content {
+      background-color: rgba(30, 30, 30, 0.95);
+      padding: 20px;
+      border: 2px solid #ff0000;
+      border-radius: 10px;
+      width: 300px;
+      max-width: 80%;
+      box-shadow: 0 0 20px #800080;
+    }
+    
+    .modal-title {
+      color: #ff0000;
+      margin-top: 0;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+    
+    .modal-input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      box-sizing: border-box;
+      background-color: rgba(20, 20, 20, 0.9);
+      color: white;
+      border: 1px solid #800080;
+      border-radius: 5px;
+    }
+    
+    .modal-buttons {
+      display: flex;
+      justify-content: space-between;
+    }
+    
+    .modal-btn {
+      padding: 8px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    
+    .confirm-btn {
+      background-color: #800080;
+      color: white;
+      border: 1px solid #ff0000;
+    }
+    
+    .cancel-btn {
+      background-color: rgba(80, 80, 80, 0.5);
+      color: white;
+      border: 1px solid #800080;
+    }
+    
+    .settings-btn {
+      background-color: #800080;
+      color: white;
+      border: 1px solid #ff0000;
+      border-radius: 5px;
+      padding: 5px 10px;
+      cursor: pointer;
+      margin-right: 10px;
+    }
+    
+    .settings-btn:hover {
+      background-color: #ff0000;
+    }
+    
+    #notificationSettings {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.8);
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .dropzone {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(128, 0, 128, 0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 18px;
+      border: 2px dashed #ff0000;
+      z-index: 10;
+      border-radius: 5px;
+    }
+    
+    .image-preview {
+      display: none;
+      position: absolute;
+      bottom: 60px;
+      left: 10px;
+      background-color: rgba(30, 30, 30, 0.9);
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #800080;
+      max-width: calc(100% - 20px);
+    }
+    
+    .image-preview img {
+      max-width: 100px;
+      max-height: 100px;
+      border-radius: 5px;
+    }
+    
+    .image-preview-actions {
+      display: flex;
+      margin-top: 10px;
+      justify-content: space-between;
+    }
+    
+    .preview-cancel {
+      background-color: rgba(80, 80, 80, 0.5);
+      color: white;
+      border: 1px solid #800080;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    
+    .file-too-large {
+      color: #ff0000;
+      font-size: 12px;
+      margin-top: 5px;
+    }
+    
+    .banned-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      text-align: center;
+    }
+    
+    .banned-message {
+      font-size: 24px;
+      color: #ff0000;
+      margin-bottom: 20px;
+      text-shadow: 0 0 5px #800080;
+    }
+    
+    .banned-reason {
+      font-size: 18px;
+      color: #ff9900;
+      margin-bottom: 30px;
+      max-width: 80%;
+    }
+    
+    .banned-info {
+      font-size: 14px;
+      color: #aaaaaa;
+    }
+    
+    @media (max-width: 768px) {
+      .container {
+        padding: 10px;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>AI Code Generator</h1>
-        <textarea id="requestInput" placeholder="Describe the code you want to generate..."></textarea>
-        <button id="generateButton">Generate Code</button>
-        <h2>Generated Code:</h2>
-        <pre id="generatedCode"></pre>
+  <div class="container" id="mainContainer">
+    <div class="header">
+      <h1>Secure Website</h1>
     </div>
-    <script src="script.js"></script>
+    
+    <div class="user-info">
+      <div class="username-container">
+        <input id="username" type="text" placeholder="Your name" maxlength="undefined">
+        <button id="settingsBtn" class="settings-btn">Settings</button>
+      </div>
+      <div class="user-count">
+        <span id="activeUsers">0</span> users online
+      </div>
+    </div>
+    
+    <div class="chat-container">
+      <div id="messages"></div>
+      <div id="typingIndicator" class="typing-indicator"></div>
+      <div class="input-area">
+        <div id="dropzone" class="dropzone">Drop image here</div>
+        <input id="m" autocomplete="off" placeholder="Type here or drop images">
+        <button id="sendBtn">Send</button>
+        <div class="image-preview" id="imagePreview">
+          <div>Image Preview:</div>
+          <img id="previewImg" src="" alt="Preview">
+          <div class="file-too-large" id="fileTooLarge" style="display: none;">File too large (max 15MB)</div>
+          <div class="image-preview-actions">
+            <button class="preview-cancel" id="cancelImage">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Banned user container -->
+  <div class="container" id="bannedContainer" style="display: none;">
+    <div class="header">
+      <h1>Secure Website</h1>
+    </div>
+    
+    <div class="chat-container">
+      <div class="banned-container">
+        <div class="banned-message">You are currently banned.</div>
+        <div class="banned-reason" id="banReason"></div>
+        <div class="banned-info" id="banInfo"></div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Admin code modal -->
+  <div id="adminModal" class="modal">
+    <div class="modal-content">
+      <h3 class="modal-title">Admin Verification</h3>
+      <p>Enter admin code to continue:</p>
+      <input type="password" id="adminCode" class="modal-input" placeholder="Admin code">
+      <div id="banReasonContainer" style="display: none;">
+        <p>Enter reason for ban:</p>
+        <input type="text" id="banReasonInput" class="modal-input" placeholder="Reason for ban">
+      </div>
+      <div class="modal-buttons">
+        <button id="cancelAdmin" class="modal-btn cancel-btn">Cancel</button>
+        <button id="confirmAdmin" class="modal-btn confirm-btn">Verify</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Notification Settings Modal -->
+  <div id="notificationSettings" class="modal">
+    <div class="modal-content">
+      <h3 class="modal-title">Notification Settings</h3>
+      <p>Enable browser notifications for new messages?</p>
+      <div class="modal-buttons">
+        <button id="cancelNotifications" class="modal-btn cancel-btn">Cancel</button>
+        <button id="enableNotifications" class="modal-btn confirm-btn">Enable</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const socket = io();
+      
+      // DOM elements
+      const mainContainer = document.getElementById('mainContainer');
+      const bannedContainer = document.getElementById('bannedContainer');
+      const banReason = document.getElementById('banReason');
+      const banInfo = document.getElementById('banInfo');
+      const messages = document.getElementById('messages');
+      const messageInput = document.getElementById('m');
+      const sendButton = document.getElementById('sendBtn');
+      const usernameInput = document.getElementById('username');
+      const typingIndicator = document.getElementById('typingIndicator');
+      const activeUsersElement = document.getElementById('activeUsers');
+      const adminModal = document.getElementById('adminModal');
+      const adminCodeInput = document.getElementById('adminCode');
+      const banReasonContainer = document.getElementById('banReasonContainer');
+      const banReasonInput = document.getElementById('banReasonInput');
+      const confirmAdminBtn = document.getElementById('confirmAdmin');
+      const cancelAdminBtn = document.getElementById('cancelAdmin');
+      const settingsBtn = document.getElementById('settingsBtn');
+      const notificationSettings = document.getElementById('notificationSettings');
+      const enableNotificationsBtn = document.getElementById('enableNotifications');
+      const cancelNotificationsBtn = document.getElementById('cancelNotifications');
+      const dropzone = document.getElementById('dropzone');
+      const imagePreview = document.getElementById('imagePreview');
+      const previewImg = document.getElementById('previewImg');
+      const cancelImage = document.getElementById('cancelImage');
+      const fileTooLarge = document.getElementById('fileTooLarge');
+      
+      // Default page title
+      const defaultTitle = 'Secure Website';
+      document.title = defaultTitle;
+      
+      // Generate a unique session ID for this browser tab
+      const sessionId = Math.random().toString(36).substring(2, 15);
+      
+      // Unread messages counter
+      let unreadCount = 0;
+      let pageHasFocus = document.hasFocus();
+      
+      // Variable to store current image data
+      let currentImage = null;
+      const MAX_FILE_SIZE = 15 * 1024 * 1024; // 15MB in bytes
+      
+      // Admin action tracking
+      let adminAction = 'clear'; // Default admin action
+      let adminTarget = ''; // Target username for admin actions
+      
+      // Notification permission status
+      let notificationsEnabled = false;
+      
+      // Check for stored notification preference
+      if (getCookie('notificationsEnabled') === 'true') {
+        notificationsEnabled = true;
+      }
+      
+      // Initialize username
+      initializeUsername();
+      
+      // Function to initialize username
+      function initializeUsername() {
+        const storedUsername = localStorage.getItem('username');
+        if (storedUsername) {
+          usernameInput.value = storedUsername;
+        } else {
+          // Generate a new random username
+          generateNewGuestUsername();
+        }
+        
+        // Notify the server about our username
+        socket.emit('check ban status', usernameInput.value);
+      }
+      
+      // Generate a new random guest username
+      function generateNewGuestUsername() {
+        // Try up to 100 different random numbers to avoid banned numbers
+        let bannedNumbers = [];
+        try {
+          bannedNumbers = localStorage.getItem('bannedUserNumbers') 
+            ? JSON.parse(localStorage.getItem('bannedUserNumbers')) 
+            : [];
+        } catch (e) {
+          console.error('Error parsing banned numbers:', e);
+          bannedNumbers = [];
+        }
+        
+        for (let i = 0; i < 100; i++) {
+          const randomNum = Math.floor(Math.random() * 10000);
+          const newUsername = 'User' + randomNum;
+          
+          // Check locally if this username might be banned
+          const isBanned = bannedNumbers.includes(randomNum.toString());
+          
+          if (!isBanned) {
+            usernameInput.value = newUsername;
+            localStorage.setItem('username', newUsername);
+            return;
+          }
+        }
+        
+        // If we couldn't find a non-banned number after 100 tries, just use a timestamp
+        const timestamp = Date.now().toString().slice(-5);
+        const newUsername = 'User' + timestamp;
+        usernameInput.value = newUsername;
+        localStorage.setItem('username', newUsername);
+      }
+      
+      // Update username in localStorage when it changes
+      usernameInput.addEventListener('change', () => {
+        localStorage.setItem('username', usernameInput.value);
+        // Send username update to server to check for ban status
+        socket.emit('update username', usernameInput.value);
+      });
+      
+      // Check ban status when connecting
+      socket.on('connect', () => {
+        socket.emit('check ban status', usernameInput.value);
+      });
+      
+      // Check if page is in focus - Cross-tab aware focus management
+      window.addEventListener('focus', () => {
+        pageHasFocus = true;
+        localStorage.setItem('chatActiveTab', sessionId);
+        // Reset unread count when page gets focus
+        unreadCount = 0;
+        document.title = defaultTitle;
+        // Broadcast focus event to other tabs
+        localStorage.setItem('chatTabFocus', Date.now().toString());
+      });
+      
+      window.addEventListener('blur', () => {
+        pageHasFocus = false;
+        if (localStorage.getItem('chatActiveTab') === sessionId) {
+          localStorage.removeItem('chatActiveTab');
+        }
+      });
+      
+      // Listen to storage events to coordinate between tabs
+      window.addEventListener('storage', (event) => {
+        if (event.key === 'chatTabFocus') {
+          // Another tab is in focus
+          if (!document.hasFocus()) {
+            pageHasFocus = false;
+          }
+        } else if (event.key === 'chatActiveTab') {
+          if (event.newValue === sessionId) {
+            // This tab is the active one
+            pageHasFocus = true;
+            unreadCount = 0;
+            document.title = defaultTitle;
+          } else if (event.newValue === null) {
+            // The active tab was closed or lost focus
+            if (document.hasFocus()) {
+              localStorage.setItem('chatActiveTab', sessionId);
+            }
+          }
+        } else if (event.key === 'chatUnreadReset') {
+          // Reset unread count
+          unreadCount = 0;
+          document.title = defaultTitle;
+        } else if (event.key === 'newMessage') {
+          // Update unread count if this tab is not focused
+          if (!isAnyTabFocused()) {
+            try {
+              const messageData = JSON.parse(event.newValue);
+              if (messageData.username !== usernameInput.value.trim()) {
+                unreadCount++;
+                updateTitle();
+              }
+            } catch (e) {
+              console.error('Error parsing new message data:', e);
+            }
+          }
+        }
+      });
+      
+      // Initialize the active tab
+      if (document.hasFocus()) {
+        localStorage.setItem('chatActiveTab', sessionId);
+      }
+      
+      // Cookie functions
+      function setCookie(name, value, days) {
+        let expires = '';
+        if (days) {
+          const date = new Date();
+          date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+          expires = '; expires=' + date.toUTCString();
+        }
+        document.cookie = name + '=' + (value || '') + expires + '; path=/';
+      }
+      
+      function getCookie(name) {
+        const nameEQ = name + '=';
+        const ca = document.cookie.split(';');
+        for (let i = 0; i < ca.length; i++) {
+          let c = ca[i];
+          while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+          if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+        }
+        return null;
+      }
+      
+      // Browser notification functions
+      function requestNotificationPermission() {
+        if (!("Notification" in window)) {
+          alert("This browser does not support desktop notifications");
+          return;
+        }
+        
+        Notification.requestPermission().then(permission => {
+          if (permission === "granted") {
+            notificationsEnabled = true;
+            setCookie('notificationsEnabled', 'true', 30);
+            showNotification('Notifications Enabled', 'You will now receive notifications for new messages.');
+          }
+        });
+      }
+      
+      function showNotification(title, body) {
+        if (notificationsEnabled && Notification.permission === "granted" && !isAnyTabFocused()) {
+          const notification = new Notification(title, {
+            body: body,
+            icon: '/favicon.ico' // You can add your site's favicon or an appropriate icon
+          });
+          
+          notification.onclick = function() {
+            window.focus();
+            notification.close();
+            localStorage.setItem('chatUnreadReset', Date.now().toString());
+          };
+        }
+      }
+      
+      // Check if any tab is focused
+      function isAnyTabFocused() {
+        return localStorage.getItem('chatActiveTab') !== null;
+      }
+      
+      // Update title with unread count
+      function updateTitle() {
+        if (unreadCount > 0 && !isAnyTabFocused()) {
+          document.title = `(${unreadCount}) ${defaultTitle}`;
+        } else {
+          document.title = defaultTitle;
+        }
+      }
+      
+      // Show banned user interface
+      function showBannedInterface(banData) {
+        mainContainer.style.display = 'none';
+        bannedContainer.style.display = 'flex';
+        
+        if (banData.reason) {
+          banReason.textContent = `Reason: ${banData.reason}`;
+        } else {
+          banReason.textContent = '';
+        }
+        
+        if (banData.date) {
+          banInfo.textContent = `Ban date: ${new Date(banData.date).toLocaleDateString()}`;
+        } else {
+          banInfo.textContent = '';
+        }
+        
+        // Store banned guest numbers locally
+        if (banData.guestNumber) {
+          let bannedNumbers = [];
+          try {
+            bannedNumbers = localStorage.getItem('bannedUserNumbers') 
+              ? JSON.parse(localStorage.getItem('bannedUserNumbers')) 
+              : [];
+          } catch (e) {
+            console.error('Error parsing banned numbers:', e);
+            bannedNumbers = [];
+          }
+          
+          if (!bannedNumbers.includes(banData.guestNumber)) {
+            bannedNumbers.push(banData.guestNumber);
+            localStorage.setItem('bannedUserNumbers', JSON.stringify(bannedNumbers));
+          }
+        }
+      }
+      
+      // Show normal chat interface
+      function showChatInterface() {
+        bannedContainer.style.display = 'none';
+        mainContainer.style.display = 'flex';
+      }
+      
+      // Typing detection variables
+      let typingTimeout;
+      let isTyping = false;
+      
+      // Functions
+      const sendMessage = () => {
+        const messageText = messageInput.value.trim();
+        
+        if (messageText !== '' || currentImage) {
+          const username = usernameInput.value.trim() || 'Anonymous';
+          
+          // Check for commands
+          if (messageText.startsWith('/clear') && !currentImage) {
+            // Show admin modal for clearing chat
+            adminModal.style.display = 'flex';
+            adminCodeInput.value = '';
+            adminCodeInput.focus();
+            adminAction = 'clear';
+            banReasonContainer.style.display = 'none';
+            messageInput.value = '';
+            return;
+          }
+          
+          // Check for IP lookup command
+          if (messageText.startsWith('/ip') && !currentImage) {
+            const targetUsername = messageText.substring(3).trim();
+            if (targetUsername) {
+              // Show admin modal for IP lookup
+              adminModal.style.display = 'flex';
+              adminCodeInput.value = '';
+              adminCodeInput.focus();
+              adminAction = 'ip';
+              adminTarget = targetUsername;
+              banReasonContainer.style.display = 'none';
+              messageInput.value = '';
+              return;
+            } else {
+              displaySystemMessage({
+                message: 'Usage: /ip username - Get IP address of a user',
+                timestamp: new Date().toLocaleTimeString()
+              });
+              messageInput.value = '';
+              return;
+            }
+          }
+          
+          // Check for ban command
+          if (messageText.startsWith('/ban') && !currentImage) {
+            const targetUsername = messageText.substring(4).trim();
+            if (targetUsername) {
+              // Show admin modal for banning user
+              adminModal.style.display = 'flex';
+              adminCodeInput.value = '';
+              adminCodeInput.focus();
+              banReasonInput.value = '';
+              adminAction = 'ban';
+              adminTarget = targetUsername;
+              banReasonContainer.style.display = 'block';
+              messageInput.value = '';
+              return;
+            } else {
+              displaySystemMessage({
+                message: 'Usage: /ban username - Ban a user from the chat',
+                timestamp: new Date().toLocaleTimeString()
+              });
+              messageInput.value = '';
+              return;
+            }
+          }
+          
+          // Check for unban command
+          if (messageText.startsWith('/unban') && !currentImage) {
+            const targetUsername = messageText.substring(6).trim();
+            if (targetUsername) {
+              // Show admin modal for unbanning user
+              adminModal.style.display = 'flex';
+              adminCodeInput.value = '';
+              adminCodeInput.focus();
+              adminAction = 'unban';
+              adminTarget = targetUsername;
+              banReasonContainer.style.display = 'none';
+              messageInput.value = '';
+              return;
+            } else {
+              displaySystemMessage({
+                message: 'Usage: /unban username - Unban a user from the chat',
+                timestamp: new Date().toLocaleTimeString()
+              });
+              messageInput.value = '';
+              return;
+            }
+          }
+          
+          // Prepare message data
+          const messageData = {
+            username: username,
+            message: messageText
+          };
+          
+          // If there's an image, add it to the message data
+          if (currentImage) {
+            messageData.image = currentImage;
+          }
+          
+          socket.emit('chat message', messageData);
+          
+          // Clear the input and image preview
+          messageInput.value = '';
+          clearImagePreview();
+          stopTypingNotification();
+        }
+      };
+      
+      const startTypingNotification = () => {
+        if (!isTyping) {
+          isTyping = true;
+          socket.emit('typing', usernameInput.value.trim() || 'Anonymous');
+        }
+        
+        clearTimeout(typingTimeout);
+        typingTimeout = setTimeout(stopTypingNotification, 2000);
+      };
+      
+      const stopTypingNotification = () => {
+        isTyping = false;
+        socket.emit('stop typing');
+      };
+      
+      const displayMessage = (msg) => {
+        const messageElement = document.createElement('div');
+        messageElement.className = 'message';
+        
+        let content = '';
+        if (msg.message) {
+          content = `<div class="content">${msg.message}</div>`;
+        }
+        
+        if (msg.image) {
+          content += `<div class="content"><img src="${msg.image}" alt="User shared image"></div>`;
+        }
+        
+        messageElement.innerHTML = `
+          <div class="username">${msg.username}</div>
+          ${content}
+          <div class="timestamp">${msg.timestamp}</div>
+        `;
+        
+        messages.appendChild(messageElement);
+        messages.scrollTop = messages.scrollHeight;
+      };
+      
+      const displaySystemMessage = (msg) => {
+        const messageElement = document.createElement('div');
+        messageElement.className = 'system-message';
+        
+        messageElement.innerHTML = `
+          <div class="content">${msg.message}</div>
+          <div class="timestamp">${msg.timestamp}</div>
+        `;
+        
+        messages.appendChild(messageElement);
+        messages.scrollTop = messages.scrollHeight;
+      };
+      
+      const clearChat = () => {
+        messages.innerHTML = '';
+      };
+      
+      // Image handling functions
+      function handleFiles(files) {
+        const file = files[0];
+        
+        if (!file || !file.type.startsWith('image/')) {
+          displaySystemMessage({
+            message: 'Only image files are supported.',
+            timestamp: new Date().toLocaleTimeString()
+          });
+          return;
+        }
+        
+        if (file.size > MAX_FILE_SIZE) {
+          fileTooLarge.style.display = 'block';
+          return;
+        }
+        
+        fileTooLarge.style.display = 'none';
+        
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          previewImg.src = e.target.result;
+          currentImage = e.target.result;
+          imagePreview.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+      }
+      
+      function clearImagePreview() {
+        imagePreview.style.display = 'none';
+        previewImg.src = '';
+        currentImage = null;
+        fileTooLarge.style.display = 'none';
+      }
+      
+      // Drag and drop event listeners
+      messageInput.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropzone.style.display = 'flex';
+      });
+      
+      dropzone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+      });
+      
+      dropzone.addEventListener('dragleave', (e) => {
+        e.preventDefault();
+        dropzone.style.display = 'none';
+      });
+      
+      dropzone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropzone.style.display = 'none';
+        
+        if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+          handleFiles(e.dataTransfer.files);
+        }
+      });
+      
+      // Allow paste for images
+      document.addEventListener('paste', (e) => {
+        if (e.clipboardData && e.clipboardData.items) {
+          const items = e.clipboardData.items;
+          for (let i = 0; i < items.length; i++) {
+            if (items[i].type.indexOf('image') !== -1) {
+              const file = items[i].getAsFile();
+              handleFiles([file]);
+              break;
+            }
+          }
+        }
+      });
+      
+      // Cancel image button
+      cancelImage.addEventListener('click', clearImagePreview);
+      
+      // Event listeners
+      sendButton.addEventListener('click', sendMessage);
+      
+      messageInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          sendMessage();
+        } else {
+          startTypingNotification();
+        }
+      });
+      
+      // Settings button event
+      settingsBtn.addEventListener('click', () => {
+        notificationSettings.style.display = 'flex';
+      });
+      
+      // Notification buttons events
+      enableNotificationsBtn.addEventListener('click', () => {
+        requestNotificationPermission();
+        notificationSettings.style.display = 'none';
+      });
+      
+      cancelNotificationsBtn.addEventListener('click', () => {
+        notificationSettings.style.display = 'none';
+      });
+      
+      // Admin modal events
+      confirmAdminBtn.addEventListener('click', () => {
+        const adminCode = adminCodeInput.value.trim();
+        
+        if (adminAction === 'clear') {
+          socket.emit('verify admin', { 
+            code: adminCode, 
+            action: 'clear' 
+          });
+        } else if (adminAction === 'ip') {
+          socket.emit('verify admin', { 
+            code: adminCode, 
+            action: 'ip',
+            targetUsername: adminTarget
+          });
+        } else if (adminAction === 'ban') {
+          const banReason = banReasonInput.value.trim();
+          if (!banReason) {
+            alert('Please provide a reason for the ban');
+            return;
+          }
+          socket.emit('verify admin', { 
+            code: adminCode, 
+            action: 'ban',
+            targetUsername: adminTarget,
+            reason: banReason
+          });
+        } else if (adminAction === 'unban') {
+          socket.emit('verify admin', { 
+            code: adminCode, 
+            action: 'unban',
+            targetUsername: adminTarget
+          });
+        }
+      });
+      
+      cancelAdminBtn.addEventListener('click', () => {
+        adminModal.style.display = 'none';
+      });
+      
+      // Socket events
+      socket.on('chat message', (msg) => {
+        displayMessage(msg);
+        
+        // Store message data for cross-tab coordination
+        localStorage.setItem('newMessage', JSON.stringify({
+          username: msg.username,
+          timestamp: Date.now()
+        }));
+        
+        // Don't increment unread count for messages from current user
+        if (msg.username !== usernameInput.value.trim() && !isAnyTabFocused()) {
+          unreadCount++;
+          updateTitle();
+          
+          // Show notification if enabled
+          showNotification('New Message', `${msg.username} has sent a new message.`);
+        }
+      });
+      
+      socket.on('system message', (msg) => {
+        displaySystemMessage(msg);
+      });
+      
+      socket.on('message history', (history) => {
+        // Display message history
+        history.forEach(msg => {
+          displayMessage(msg);
+        });
+        messages.scrollTop = messages.scrollHeight;
+      });
+      
+      socket.on('admin verified', (result) => {
+        adminModal.style.display = 'none';
+        
+        if (result.verified) {
+          if (result.action === 'clear') {
+            socket.emit('clear messages');
+          }
+          // No need to do anything for other admin actions as the server 
+          // will send separate events for them
+        } else {
+          displaySystemMessage({
+            message: 'Admin verification failed: Incorrect code',
+            timestamp: new Date().toLocaleTimeString()
+          });
+        }
+      });
+      
+      socket.on('ip lookup result', (result) => {
+        if (result.success) {
+          displaySystemMessage({
+            message: `IP Address for ${result.username}: ${result.ip}`,
+            timestamp: new Date().toLocaleTimeString()
+          });
+        } else {
+          displaySystemMessage({
+            message: result.message,
+            timestamp: new Date().toLocaleTimeString()
+          });
+        }
+      });
+      
+      socket.on('ban result', (result) => {
+        if (result.success) {
+          displaySystemMessage({
+            message: `${result.username} has been banned. Reason: ${result.reason}`,
+            timestamp: new Date().toLocaleTimeString()
+          });
+        } else {
+          displaySystemMessage({
+            message: result.message,
+            timestamp: new Date().toLocaleTimeString()
+          });
+        }
+      });
+      
+      socket.on('unban result', (result) => {
+        if (result.success) {
+          displaySystemMessage({
+            message: `${result.username} has been unbanned.`,
+            timestamp: new Date().toLocaleTimeString()
+          });
+        } else {
+          displaySystemMessage({
+            message: result.message,
+            timestamp: new Date().toLocaleTimeString()
+          });
+        }
+      });
+      
+      socket.on('banned', (banData) => {
+        showBannedInterface(banData);
+      });
+      
+      socket.on('not banned', () => {
+        showChatInterface();
+      });
+      
+      socket.on('ban status', (status) => {
+        if (status.banned) {
+          showBannedInterface(status);
+        } else {
+          showChatInterface();
+        }
+      });
+      
+      socket.on('clear chat', clearChat);
+      
+      socket.on('user typing', (username) => {
+        typingIndicator.textContent = `${username} is typing...`;
+      });
+      
+      socket.on('user stop typing', () => {
+        typingIndicator.textContent = '';
+      });
+      
+      socket.on('user count', (count) => {
+        activeUsersElement.textContent = count;
+      });
+    });
+  </script>
 </body>
 </html>
